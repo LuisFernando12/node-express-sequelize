@@ -13,8 +13,8 @@ class EnrollmentController {
     }
   };
   static create = async (req, res) => {
-    const { student_id } = req.params;
-    const {status, class_id} = req.body;
+    const { student_id, class_id} = req.params;
+    const {status} = req.body;
     try {
       const enrollment = await database.Enrollment.create({status, class_id, student_id});
 
@@ -34,8 +34,7 @@ class EnrollmentController {
   };
   static update = async (req, res) => {
     const {id} = req.params;
-    const { student_id } = req.params;
-    const {status, class_id} = req.body;
+    const { student_id, class_id ,status} = req.body;
     try {
       await database.Enrollment.update({status, class_id, student_id},{where: { id: Number(id)}});
       return res.json(await database.Enrollment.findOne({where: {id: Number(id)}}))
