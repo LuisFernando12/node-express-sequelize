@@ -11,23 +11,27 @@ route.get('/people/:id', PersonController.get);
 route.post('/people', PersonController.create);
 route.put('/people/:id', PersonController.update);
 route.delete('/people/:id', PersonController.delete);
+route.post('/people/:id', PersonController.restore);
 
 route.get('/level', LevelController.find);
 route.get('/level/:id', LevelController.get);
 route.post('/level', LevelController.create);
 route.put('/level/:id', LevelController.update);
 route.delete('/level/:id', LevelController.delete);
+route.post('/level/:id', LevelController.restore);
 
 route.get('/class', ClassController.find);
 route.get('/class/:id', ClassController.get);
 route.post('/people/:teacher_id/level/:level_id/class', ClassController.create);
 route.put('/class/:id', ClassController.update);
 route.delete('/class/:id', ClassController.delete);
+route.post('/class/:id', ClassController.restore);
 
 route.get('/enrollment', EnrollmentController.find);
 route.get('/enrollment/:id', EnrollmentController.get);
 route.post('/people/:student_id/class/:class_id/enrollment', EnrollmentController.create);
 route.put('/enrollment/:id', EnrollmentController.update);
 route.delete('/enrollment/:id', EnrollmentController.delete);
+route.post('/enrollment/:id', EnrollmentController.restore);
 
 module.exports = route;

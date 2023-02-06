@@ -51,5 +51,14 @@ class EnrollmentController {
      return res.status(500).json({message:error.message});
     }
   };
+  static restore = async (req, res) => {
+    const {id} = req.params;
+    try {
+       await database.Enrollment.restore({where: {id: Number(id)}});
+      return res.status(200).json(await database.Enrollment.findOne({where: {id: Number(id)}}));
+    } catch (error) {
+     return res.status(500).json({message:error.message});
+    }
+  };
 }
 module.exports = EnrollmentController;
