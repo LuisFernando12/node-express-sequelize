@@ -3,7 +3,19 @@ const database = require("../models");
 class PersonController {
   static find = async (req, res) => {
     try {
-      const allPeople = await database.People.findAll();
+      const allPeopleActive = await database.People.findAll();
+      if (!allPeopleActive) {
+        console.log("error");
+      }
+      return res.json(allPeopleActive);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  };
+
+  static findAllPeople = async (req, res) => {
+    try {
+      const allPeople = await database.People.scope('all').findAll();
       if (!allPeople) {
         console.log("error");
       }

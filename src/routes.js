@@ -7,6 +7,7 @@ const route = express.Router();
 route.get('/health',(req, res)=>{res.json({ping:'pong'})});
 
 route.get('/people', PersonController.find);
+route.get('/people/all', PersonController.findAllPeople);
 route.get('/people/:id', PersonController.get);
 route.post('/people', PersonController.create);
 route.put('/people/:id', PersonController.update);
@@ -29,6 +30,7 @@ route.post('/class/:id', ClassController.restore);
 
 route.get('/enrollment', EnrollmentController.find);
 route.get('/enrollment/:id', EnrollmentController.get);
+route.get('/people/:student_id/enrollment', EnrollmentController.getEnrollment);
 route.post('/people/:student_id/class/:class_id/enrollment', EnrollmentController.create);
 route.put('/enrollment/:id', EnrollmentController.update);
 route.delete('/enrollment/:id', EnrollmentController.delete);

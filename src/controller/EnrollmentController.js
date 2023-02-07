@@ -32,6 +32,17 @@ class EnrollmentController {
      return res.status(500).json({message:error.message});
     }
   };
+
+  static getEnrollment = async (req, res) => {
+    const {student_id} = req.params;
+    try {
+      const people = await database.People.findOne({where: {id: Number(student_id)}});
+      const enrolledClasses = await people.getEnrolledClasses();
+      return res.json(enrolledClasses);
+    } catch (error) {
+     return res.status(500).json({message:error.message});
+    }
+  };
   static update = async (req, res) => {
     const {id} = req.params;
     const { student_id, class_id ,status} = req.body;
