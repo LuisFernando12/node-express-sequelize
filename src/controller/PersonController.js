@@ -1,9 +1,9 @@
-const database = require("../models");
-
+const { PersonServices } = require('../services');
+const personService = new PersonServices();
 class PersonController {
   static find = async (req, res) => {
     try {
-      const allPeopleActive = await database.People.findAll();
+      const allPeopleActive = await personService.getActivesRegisters();
       if (!allPeopleActive) {
         console.log("error");
       }
@@ -12,10 +12,9 @@ class PersonController {
       res.status(500).json(error.message);
     }
   };
-
   static findAllPeople = async (req, res) => {
     try {
-      const allPeople = await database.People.scope('all').findAll();
+      const allPeople = await personService.getAllRegistersWithScope();
       if (!allPeople) {
         console.log("error");
       }
@@ -27,59 +26,69 @@ class PersonController {
   static create = async (req, res) => {
     const { name, active, email, role } = req.body;
     try {
-      const people = await database.People.create({
-        name,
-        active,
-        email,
-        role
-      });
+      const people = await personService.createRegister(
+        {
+          name,
+          active,
+          email,
+          role
+        }
+      );
 
-     return res.status(201).json(people);
+      return res.status(201).json(people);
     } catch (error) {
-     return res.status(500).json({message:error.message});
+      return res.status(500).json({ message: error.message });
     }
   };
   static get = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     try {
-      const people = await database.People.findOne({where: {id: Number(id)}});
+      const people = await personService.getOneRegister(id);
       return res.json(people);
     } catch (error) {
-     return res.status(500).json({message:error.message});
+      return res.status(500).json({ message: error.message });
     }
   };
   static update = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     const { name, active, email, role } = req.body;
     try {
-      await database.People.update({
+      await personService.updateRegister({
         name,
         active,
         email,
         role,
-        
-      },{where: { id: Number(id)}});
-      return res.json(await database.People.findOne({where: {id: Number(id)}}))
+      }, id);
+      return res.status(200).json({ mensagem: `id ${id} atualizado` })
     } catch (error) {
-      return res.status(500).json({message:error.message});
+      return res.status(500).json({ message: error.message });
+    }
+  };
+  static cancelPeople = async (req, res) => {
+    const { student_id } = req.params
+    try {
+      await personService.cancelPeopleAndEnrollment(student_id)
+      return res.status(200).json({ message: `matriculas ref. estudate ${student_id} cancelada` })
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
     }
   };
   static delete = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     try {
-      const people = await database.People.destroy({where: {id: Number(id)}});
+      const people = await personService.deleteRegister(id);
       return res.status(204).json(people);
     } catch (error) {
-     return res.status(500).json({message:error.message});
+      return res.status(500).json({ message: error.message });
     }
   };
   static restore = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     try {
-      await database.People.restore({where: {id: Number(id)}});
-      return res.status(200).json(await database.People.findOne({where:{id: Number(id)}}));
+      await personService.restoreRegister(id);
+      return res.status(200).json(await personService.getOneRegister(id));
     } catch (error) {
-     return res.status(500).json({message:error.message});
+      return res.status(500).json({ message: error.message });
     }
   };
 }

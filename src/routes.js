@@ -1,6 +1,6 @@
 const express = require('express');
 const ClassController = require('./controller/ClassController');
-const EnrollmentController = require('./controller/enrollmentController');
+const EnrollmentController = require('./controller/EnrollmentController');
 const LevelController = require('./controller/LevelController');
 const PersonController = require('./controller/PersonController');
 const route = express.Router();
@@ -13,6 +13,7 @@ route.post('/people', PersonController.create);
 route.put('/people/:id', PersonController.update);
 route.delete('/people/:id', PersonController.delete);
 route.post('/people/:id', PersonController.restore);
+route.post('/people/:student_id/cancel', PersonController.cancelPeople);
 
 route.get('/level', LevelController.find);
 route.get('/level/:id', LevelController.get);
@@ -30,6 +31,8 @@ route.post('/class/:id', ClassController.restore);
 
 route.get('/enrollment', EnrollmentController.find);
 route.get('/enrollment/:id', EnrollmentController.get);
+route.get('/enrollment/:classId/class', EnrollmentController.getEnrollmentByClass);
+route.get('/people/enrollment/full/class', EnrollmentController.getFullEnrollment);
 route.get('/people/:student_id/enrollment', EnrollmentController.getEnrollment);
 route.post('/people/:student_id/class/:class_id/enrollment', EnrollmentController.create);
 route.put('/enrollment/:id', EnrollmentController.update);

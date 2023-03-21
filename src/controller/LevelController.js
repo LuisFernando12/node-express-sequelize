@@ -1,9 +1,9 @@
-const database = require("../models");
-
+const {LevelServices} = require("../services")
+const levelServices = new LevelServices();
 class LevelController {
   static find = async (req, res) => {
     try {
-      const allLevel = await database.Level.findAll();
+      const allLevel = await levelServices.getAllRegisters();
       if (!allLevel) {
         console.log("error");
       }
@@ -15,7 +15,7 @@ class LevelController {
   static create = async (req, res) => {
     const { level_description } = req.body;
     try {
-      const level = await database.Level.create({
+      const level = await levelServices.createRegister({
         level_description
       });
 
@@ -27,7 +27,7 @@ class LevelController {
   static get = async (req, res) => {
     const {id} = req.params;
     try {
-      const level = await database.Level.findOne({where: {id: Number(id)}});
+      const level = await levelServices.getOneRegister(id);
       return res.json(level);
     } catch (error) {
      return res.status(500).json({message:error.message});
@@ -37,10 +37,10 @@ class LevelController {
     const {id} = req.params;
     const { level_description } = req.body;
     try {
-      await database.Level.update({
+      await levelServices.updateRegister({
         level_description,    
-      },{where: { id: Number(id)}});
-      return res.json(await database.Level.findOne({where: {id: Number(id)}}))
+      },id);
+      return res.json(await levelServices.getOneRegister(id))
     } catch (error) {
       return res.status(500).json({message:error.message});
     }
@@ -48,7 +48,7 @@ class LevelController {
   static delete = async (req, res) => {
     const {id} = req.params;
     try {
-      const level = await database.Level.destroy({where: {id: Number(id)}});
+      const level = await levelServices.deleteRegister(id);
       return res.status(204).json(level);
     } catch (error) {
      return res.status(500).json({message:error.message});
@@ -57,8 +57,8 @@ class LevelController {
   static restore = async (req, res) => {
     const {id} = req.params;
     try {
-       await database.Level.restore({where: {id: Number(id)}});
-      return res.status(200).json(await database.Level.findOne({where: {id: Number(id)}}));
+       await levelServices.restoreRegister(id);
+      return res.status(200).json(await levelServices.getOneRegister(id));
     } catch (error) {
      return res.status(500).json({message:error.message});
     }
